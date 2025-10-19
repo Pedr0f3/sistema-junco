@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="471509474_622548333548650_6277356145412687007_n-removebg-preview.png" alt="">
+        <h1>Arte&Show</h1>
+        <p>Produção Junco</p>
+    </header>
+
+    <h1 class="title">APONTAMENTO DE PRODUÇÃO</h1>
+
+    <section>
+        <div class="painel">
+            <form onsubmit="return validar()">
+                <input type="text" id="login" placeholder="Usuário" required>
+                <input type="password" id="senha" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        function validar() {
+            const login = document.getElementById('login').value;
+            const senha = document.getElementById('senha').value;
+
+            if (senha === '8125' && login.toLowerCase() === 'pedro') {
+                // Redireciona para producao.html e passa o nome do usuário na URL
+                window.location.href = `producao.html?juncador=${login.toLowerCase()}`;
+                return false;
+            } else if (senha === '1234' && login.toLowerCase() === 'denilson') {
+                // MUDANÇA AQUI: Redireciona para a nova página de supervisor
+                window.location.href = `supervisor.html?supervisor=${login.toLowerCase()}`; 
+                return false;
+            } else {
+                alert('Senha ou login errados!');
+                return false;
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visão Geral da Produção - Arte&Show</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Estilos adicionais para esta página */
+        table {
+            width: 95%; /* Tabela um pouco mais larga */
+            margin-left: -98px;
+            border-collapse: collapse;
+            background-color: #262626;
+        }
+        th, td {
+            border: 1px solid #444;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #F39C12; /* Cor de destaque do cabeçalho */
+            color: white;
+        }
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 15px;
+            background-color: #1c1c1c;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat h3 {
+            padding: 0px;
+            color: #AAAAAA;
+            font-size: 1em;
+        }
+        .stat p {
+            margin: 0;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #F39C12;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="471509474_622548333548650_6277356145412687007_n-removebg-preview.png" alt="Logo Arte&Show" class="header-logo">
+        <h1>Visão Geral da Produção</h1>
+    </header>
+
+    <section>
+        <div class="painel">
+            <h2>Produção Total da Empresa</h2>
+
+            <div class="summary-stats" id="stats">
+                </div>
+
+            <table id="producaoTotalTable">
+                <thead>
+                    <tr>
+                        <th>Juncador</th> <th>Peça</th>
+                        <th>Início</th>
+                        <th>Fim</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableBody = document.querySelector('#producaoTotalTable tbody');
+            const statsContainer = document.getElementById('stats');
+            
+            // Carrega todos os dados do "banco de dados" do navegador
+            const historicoCompleto = JSON.parse(localStorage.getItem('historicoProducao') || '[]');
+
+            // Limpa a tabela antes de preencher
+            tableBody.innerHTML = '';
+
+            if (historicoCompleto.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5">Nenhum registro de produção encontrado na empresa.</td></tr>';
+                statsContainer.innerHTML = '<p>Aguardando início da produção...</p>';
+            } else {
+                let totalEmAndamento = 0;
+                let totalConcluido = 0;
+
+                // Loop para preencher a tabela com TODOS os registros
+                historicoCompleto.forEach(item => {
+                    const row = tableBody.insertRow();
+                    
+                    // Preenche cada célula da linha
+                    row.insertCell().textContent = item.juncador; // Mostra o nome do juncador
+                    row.insertCell().textContent = item.peca;
+                    row.insertCell().textContent = new Date(item.dataInicio).toLocaleString('pt-BR');
+                    
+                    // Verifica se a peça já foi finalizada
+                    if (item.dataFim) {
+                        row.insertCell().textContent = new Date(item.dataFim).toLocaleString('pt-BR');
+                        row.insertCell().textContent = '✅ Concluído';
+                        totalConcluido++;
+                    } else {
+                        row.insertCell().textContent = '---';
+                        row.insertCell().textContent = '⏳ Em Andamento';
+                        totalEmAndamento++;
+                    }
+                });
+
+                // Atualiza as estatísticas
+                statsContainer.innerHTML = `
+                    <div class="stat">
+                        <h3>Em Andamento</h3>
+                        <p>${totalEmAndamento}</p>
+                    </div>
+                    <div class="stat">
+                        <h3>Peças Concluídas</h3>
+                        <p>${totalConcluido}</p>
+                    </div>
+                    <div class="stat">
+                        <h3>Total de Peças</h3>
+                        <p>${historicoCompleto.length}</p>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

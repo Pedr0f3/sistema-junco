@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Peça - Arte&Show</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="471509474_622548333548650_6277356145412687007_n-removebg-preview.png" alt="Logo Arte&Show" class="header-logo">
+        <h1>Iniciar Nova Peça</h1>
+    </header>
+
+    <section>
+        <div class="painel">
+            <form id="iniciar-peca-form">
+                <select name="peca" id="peca" required>
+                    <option value="" disabled selected>Selecione a Peça:</option>
+                    <option value="Malta">Malta</option>
+                    <option value="Golden">Golden</option>
+                    <option value="Amber">Amber</option>
+                    <option value="Marbela">Marbela</option>
+                </select>
+                <input type="password" id="senhaSupervisor" placeholder="Senha do Supervisor" required>
+                <button type="submit">Iniciar Produção</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        const juncadorLogado = getUrlParameter('juncador');
+        const iniciarPecaForm = document.getElementById('iniciar-peca-form');
+
+        iniciarPecaForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const pecaSelecionada = document.getElementById('peca').value;
+            const senhaSupervisor = document.getElementById('senhaSupervisor').value;
+
+            // Validação de senha simples (poderia ser mais complexa)
+            if (senhaSupervisor === '8125' || senhaSupervisor === '1234') { // Senhas de supervisor válidas
+                const historico = JSON.parse(localStorage.getItem('historicoProducao') || '[]');
+                
+                const novoApontamento = {
+                    id: 'prod_' + Date.now(), // ID único baseado no timestamp
+                    juncador: juncadorLogado,
+                    peca: pecaSelecionada,
+                    dataInicio: new Date().toISOString(), // Data/hora atual no formato ISO
+                    supervisorInicio: senhaSupervisor, // Ou o nome do supervisor se você tiver
+                    dataFim: null,
+                    supervisorFim: null
+                };
+
+                historico.push(novoApontamento);
+                localStorage.setItem('historicoProducao', JSON.stringify(historico));
+                alert('Produção de ' + pecaSelecionada + ' iniciada com sucesso!');
+                window.location.href = `producao.html?juncador=${juncadorLogado}`; // Volta para a página do juncador
+            } else {
+                alert('Senha do supervisor incorreta!');
+            }
+        });
+    </script>
+</body>
+</html>

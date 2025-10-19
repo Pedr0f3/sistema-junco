@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizar Peça - Arte&Show</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <img src="471509474_622548333548650_6277356145412687007_n-removebg-preview.png" alt="Logo Arte&Show" class="header-logo">
+        <h1>Finalizar Peça</h1>
+    </header>
+
+    <section>
+        <div class="painel">
+            <form id="finalizar-peca-form">
+                <select name="tarefaEmAndamento" id="tarefaEmAndamento" required>
+                    <option value="" disabled selected>Selecione a Peça em Andamento:</option>
+                    </select>
+                <input type="password" id="senhaSupervisor" placeholder="Senha do Supervisor" required>
+                <button type="submit">Finalizar Produção</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        const juncadorLogado = getUrlParameter('juncador');
+        const finalizarPecaForm = document.getElementById('finalizar-peca-form');
+        const selectTarefas = document.getElementById('tarefaEmAndamento');
+
+        // Carregar tarefas em andamento para este juncador
+        function carregarTarefasEmAndamento() {
+            const historico = JSON.parse(localStorage.getItem('historicoProducao') || '[]');
+            const tarefasAbertas = historico.filter(item => item.juncador === juncadorLogado && item.dataFim === null);
+
+            if (tarefasAbertas.length === 0) {
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "Nenhuma peça em andamento.";
+                option.disabled = true;
+                selectTarefas.appendChild(option);
+            } else {
+                tarefasAbertas.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.textContent = `${item.peca} (Início: ${new Date(item.dataInicio).toLocaleString()})`;
+                    selectTarefas.appendChild(option);
+                });
+            }
+        }
+
+        carregarTarefasEmAndamento();
+
+        finalizarPecaForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const idTarefaSelecionada = document.getElementById('tarefaEmAndamento').value;
+            const senhaSupervisor = document.getElementById('senhaSupervisor').value;
+
+            if (!idTarefaSelecionada) {
+                alert('Por favor, selecione uma peça para finalizar.');
+                return;
+            }
+
+            // Validação de senha simples
+            if (senhaSupervisor === '8125' || senhaSupervisor === '1234') { 
+                const historico = JSON.parse(localStorage.getItem('historicoProducao') || '[]');
+                
+                const tarefaIndex = historico.findIndex(item => item.id === idTarefaSelecionada && item.juncador === juncadorLogado);
+
+                if (tarefaIndex > -1) {
+                    historico[tarefaIndex].dataFim = new Date().toISOString();
+                    historico[tarefaIndex].supervisorFim = senhaSupervisor;
+
+                    localStorage.setItem('historicoProducao', JSON.stringify(historico));
+                    alert('Produção finalizada com sucesso!');
+                    window.location.href = `producao.html?juncador=${juncadorLogado}`;
+                } else {
+                    alert('Erro: Tarefa não encontrada ou não pertence a este juncador.');
+                }
+            } else {
+                alert('Senha do supervisor incorreta!');
+            }
+        });
+    </script>
+</body>
+</html>

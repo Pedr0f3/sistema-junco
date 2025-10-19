@@ -1,0 +1,84 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #3a3a3a; /* Fundo escuro */
+    color: #ecf0f1; /* Texto claro */
+    margin: 0;
+    display: flex;
+    flex-direction: column; /* Para cabeçalho e conteúdo */
+    align-items: center;
+    text-align: center;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+header img {
+    width: 150px;
+    margin-top: 30px;
+}
+
+header h1, p {
+    margin: 0;
+}
+
+.title {
+    color: #F39C12;
+    width: 300px;
+    font-weight: 600;
+    margin: 15px;
+        text-align: center;
+}
+
+.painel {
+    width: 300px;
+    height: auto;
+    padding: 20px;
+    text-align: center;
+    border-radius: 2px;
+}
+
+input, select {
+    display: block;
+    width: 94%;
+    margin-bottom: 10px;
+    padding: 15px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-left: -5px;
+
+    border: 0;
+    outline: 0;
+}
+
+select {
+    width: 104%;
+}
+
+button {
+    /* Cores e Aparência */
+    background-color: #F39C12; /* Laranja Principal (Cor de ação) */
+    color: #FFFFFF;             /* Texto branco puro para alto contraste */
+    border: none;                /* Sem borda padrão */
+    border-radius: 8px;          /* Cantos arredondados suaves */
+    margin-left: -5px;
+
+    /* Dimensões e Espaçamento */
+    width: 105%;                 /* Ocupa 100% da largura do seu container pai */
+    padding: 15px 20px;          /* Espaçamento interno: 15px vertical, 20px horizontal */
+    margin-top: 10px;            /* Margem superior para separar do elemento acima */
+
+    /* Tipografia */
+    font-size: 16px;             /* Tamanho da fonte do texto do botão */
+    font-weight: bold;           /* Texto em negrito */
+    text-transform: uppercase;   /* Texto em maiúsculas para maior destaque */
+
+    /* Interatividade */
+    cursor: pointer;             /* Mostra um cursor de "mãozinha" ao passar por cima */
+    transition: background-color 0.3s ease; /* Transição suave para o hover */
+}
+    

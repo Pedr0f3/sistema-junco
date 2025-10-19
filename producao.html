@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Produção - Arte&Show</title>
+    <link rel="stylesheet" href="style.css"> <style>
+        /* Adicione estilos específicos para esta página se necessário */
+        .juncador-info {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 90%;
+            margin-left: -35px;
+            border-collapse: collapse;
+            background-color: #262626;
+        }
+        th, td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #F39C12;
+            color: white;
+        }
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .actions button {
+            margin: 10px;
+            margin-left: -10px;
+            padding: 25px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="471509474_622548333548650_6277356145412687007_n-removebg-preview.png" alt="Logo Arte&Show" class="header-logo">
+        <h1>Minha Produção</h1>
+    </header>
+
+    <section>
+        <div class="painel">
+            <div class="juncador-info">
+                <h2>Bem-vindo, <span id="nomeJuncador"></span>!</h2>
+            </div>
+
+            <h3>Histórico de Produção</h3>
+            <table id="historicoTable">
+                <thead>
+                    <tr>
+                        <th>Peça</th>
+                        <th>Início</th>
+                        <th>Fim</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+
+            <div class="actions">
+                <button id="iniciarPecaBtn">Iniciar Nova Peça</button>
+                <button id="finalizarPecaBtn">Finalizar Peça</button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Função para obter parâmetros da URL
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        const juncadorLogado = getUrlParameter('juncador');
+        const nomeJuncadorSpan = document.getElementById('nomeJuncador');
+        const historicoTableBody = document.querySelector('#historicoTable tbody');
+        const iniciarPecaBtn = document.getElementById('iniciarPecaBtn');
+        const finalizarPecaBtn = document.getElementById('finalizarPecaBtn');
+
+        if (juncadorLogado) {
+            nomeJuncadorSpan.textContent = juncadorLogado.charAt(0).toUpperCase() + juncadorLogado.slice(1); // Capitaliza o nome
+            carregarHistorico();
+        } else {
+            // Se não houver Juncador na URL, redireciona para o login
+            window.location.href = 'login.html';
+        }
+
+        function carregarHistorico() {
+            const historico = JSON.parse(localStorage.getItem('historicoProducao') || '[]');
+            historicoTableBody.innerHTML = ''; // Limpa o histórico atual
+
+            const historicoDoJuncador = historico.filter(item => item.juncador === juncadorLogado);
+
+            if (historicoDoJuncador.length === 0) {
+                historicoTableBody.innerHTML = '<tr><td colspan="4">Nenhum registro de produção encontrado.</td></tr>';
+            } else {
+                historicoDoJuncador.forEach(item => {
+                    const row = historicoTableBody.insertRow();
+                    row.insertCell().textContent = item.peca;
+                    row.insertCell().textContent = item.dataInicio ? new Date(item.dataInicio).toLocaleString() : 'N/A';
+                    row.insertCell().textContent = item.dataFim ? new Date(item.dataFim).toLocaleString() : 'Em Andamento';
+                    row.insertCell().textContent = item.dataFim ? 'Concluído' : 'Ativo';
+                });
+            }
+        }
+
+        // Adicionar eventos para os botões
+        iniciarPecaBtn.addEventListener('click', () => {
+            window.location.href = `iniciacao.html?juncador=${juncadorLogado}`;
+        });
+
+        finalizarPecaBtn.addEventListener('click', () => {
+            window.location.href = `finalizacao.html?juncador=${juncadorLogado}`;
+        });
+    </script>
+</body>
+</html>
